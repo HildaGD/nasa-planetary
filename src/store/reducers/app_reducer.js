@@ -1,7 +1,8 @@
 import {
     SAVE_PICTURE,
     DELETE_PICTURE,
-    DELETE_ALL_PICTURES
+    DELETE_ALL_PICTURES,
+    SAVE_ARRAY_OF_PICTURES
 } from '../actions/types'
 
 const initialState =  {favoritePictures: []}
@@ -9,31 +10,34 @@ const initialState =  {favoritePictures: []}
 export default function (state = initialState, action) {
 
     switch (action.type) {
+        case SAVE_ARRAY_OF_PICTURES:
+            const newArrayOfPictures = action.arrayOfPictures;
+            return {
+                ...state,
+                favoritePictures: state.favoritePictures.concat( newArrayOfPictures )
+            }
         case SAVE_PICTURE:
-            const newPicture = action.pictureData;//.pictureData;
+            const newPicture = action.pictureData;
             return {
                 ...state,
                 favoritePictures: state.favoritePictures.concat( newPicture )
             }
          
         case DELETE_PICTURE:
-            const elementToEliminate = action.payload.data;
-            const favoritePicturesUpdated = {...state.favoritePictures}
-            // find index of element to eliminate: index found
-            // const indexElementToEliminate = favoritePicturesClone.findIndex(({ picture }) => picture.elementToEliminate !== elementToEliminate);
+            const elementToEliminate = action.data;
+            const values = Object.values(state.favoritePictures)
+            console.log('state.favoritePictures', state.favoritePictures)
+            console.log('values', values)
+            console.log(typeof state.favoritePictures)
+            const favoritePicturesUpdated = [...values]
+            console.log(typeof favoritePicturesUpdated)
             const indexOfElementToEliminate = favoritePicturesUpdated.findIndex((element) => elementToEliminate === element);
-            // when it's ready, state.favoritePictures.remoce(index)
-            // const deleteState = Object.assign({}, ...state, state.favoritePictures.remove(indexElementToEliminate))
-            // return deleteState
-            favoritePicturesUpdated.remove(indexOfElementToEliminate);
+
+            const newArray = favoritePicturesUpdated.filter((element, index) => index !== indexOfElementToEliminate);
             return {
                 ...state,
-                favoritePictures: favoritePicturesUpdated,
+                favoritePictures: newArray,
             }
-            // return {
-            //     ...state,
-            //     favoritePictures: state.favoritePictures.filter(singlePicture => singlePicture.id !== action.pictureId)
-            // }
         case DELETE_ALL_PICTURES:
             return {
                 ...state,

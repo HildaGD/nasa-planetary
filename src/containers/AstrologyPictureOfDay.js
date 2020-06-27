@@ -4,19 +4,13 @@ import Card from 'react-bootstrap/Card'
 import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import Button from '@material-ui/core/Button';
-import Tooltip from 'react-bootstrap/Tooltip'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useDispatch, useSelector } from "react-redux";
 import Youtube from 'react-youtube'
 import getPictureDate from '../services/getPictureDate'
 import getPreviousDay from '../services/getPreviousDay'
 import getNextDay from '../services/getNextDay'
-import { SAVE_PICTURE } from '../store/actions/types';
 
-//import Bookmark from '../components/Bookmark'
+import Bookmark from '../components/Bookmark'
 
 function AstronomyPictureOfDay() {
     // Declare a new state variable, which we'll call "count"
@@ -28,16 +22,11 @@ function AstronomyPictureOfDay() {
     const [showPicture, setShowPicture] = useState(false);
     const [showYoutube, setShowYoutube] = useState(false);
 
-    const dispatch = useDispatch();
     useEffect(() => { //did mount
         const today = moment(startDate).format('YYYY-MM-DD')
-
         getTodayPicture(today)
         getPreviousPicture(today)
         getNextPicture(today)
-
-        
-        
     }, []);
 
 
@@ -143,35 +132,22 @@ function AstronomyPictureOfDay() {
                     </div>
 
                     <div className='container-fluid' >
-                        <Carousel
-                        // activeIndex={index}
-                        //direction={direction}
-                        // onSelect={this.handleSelect}
-                        //onSlide={this.handleSlide}
-                        //indicators={true}
-
-                        >
+                        <Carousel>
                             <Carousel.Item>
-
                                 <img
                                     className="rounded mx-auto d-block w-100"
                                     src={dayBefore.url}
                                     alt="First slide"
                                 />
-
-
                                 <Carousel.Caption>
                                     <h3>{dayBefore.title}</h3>
                                     <p><small>{dayBefore.explanation}</small></p>
                                     <p><small>{dayBefore.date}</small></p>
                                     <Bookmark {...dayBefore} />
                                 </Carousel.Caption>
-
-
                             </Carousel.Item>
 
                             <Carousel.Item>
-
                                 <img
                                     className="rounded mx-auto d-block w-100"
                                     src={astrology.hdurl}
@@ -179,18 +155,11 @@ function AstronomyPictureOfDay() {
                                 />
 
                                 <Carousel.Caption>
-
-
                                     <h3>{astrology.title}</h3>
                                     <p><small>{astrology.explanation}</small></p>
                                     <p><small>{astrology.date}</small></p>
-
                                     <Bookmark {...astrology} />
                                 </Carousel.Caption>
-
-
-
-
                             </Carousel.Item>
 
                             {showPicture &&
@@ -221,42 +190,6 @@ function AstronomyPictureOfDay() {
 }
 
 
-function Bookmark(props) {
 
-    const [favorite, setFavorite] = useState([])
-    const [favoritePictures, setFavoritePictures] = useState([])
-
-    // const savePic = useSelector(state=>state.favoritePictures);
-    const dispatch = useDispatch()
-
-  
-    
-    function savePicture() {
-        var favoritesImages = JSON.parse(localStorage.getItem("favoritePictures") || "[]");
-        favoritesImages.push(props);
-        setFavorite(props)
-        localStorage.setItem("favoritePictures", JSON.stringify(favoritesImages));
-        console.log(favoritesImages)
-        setFavoritePictures(favoritesImages)
-        console.log(props)
-       dispatch({type: SAVE_PICTURE, pictureData: props})
-    }
-
-    return (
-
-        <OverlayTrigger
-            overlay={
-                <Tooltip id={`tooltip-left`}>
-                    <strong>Click here to save Picture</strong>.
-                </Tooltip>
-            }
-        >
-            <Button onClick={savePicture}>
-                <FavoriteIcon style={{ color: '#ff0000' }} />
-            </Button>
-
-        </OverlayTrigger>
-    )
-}
 
 export default AstronomyPictureOfDay

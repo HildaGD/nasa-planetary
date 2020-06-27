@@ -4,14 +4,20 @@ import CardDeck from 'react-bootstrap/CardDeck'
 import DeleteIcon from '@material-ui/icons/Delete';
 import Button from 'react-bootstrap/Button'
 import Swal from 'sweetalert2'
+import { SAVE_ARRAY_OF_PICTURES, DELETE_PICTURE, DELETE_ALL_PICTURES } from '../store/actions/types';
+import { useDispatch, useSelector } from "react-redux";
 
 function FavoritePictures() {
-
-    const [favoritePictures, setFavoritePictures] = useState([])
+    const dispatch = useDispatch()
+    const counter = useSelector(state => state.counter)
+    const favoritePictures = useSelector(state => state.astronomy.favoritePictures)
+    // const [favoritePictures, setFavoritePictures] = useState([])
     const [enableButtonDelete, setEnableButtonDelete] = useState(false)
 
     useEffect(() => {
-        setFavoritePictures(JSON.parse(localStorage.getItem("favoritePictures") || "[]"))
+        const arrayOfPicturesFromLocalStorage = JSON.parse(localStorage.getItem("favoritePictures") || "[]")
+        // setFavoritePictures(arrayOfPicturesFromLocalStorage)
+        dispatch({type: SAVE_ARRAY_OF_PICTURES, arrayOfPictures: arrayOfPicturesFromLocalStorage});
     }, [])
 
     function deletePictureOfFavorites(data) {
@@ -28,13 +34,14 @@ function FavoritePictures() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                var index = favoritePictures.indexOf(data);
+                let index = favoritePictures.indexOf(data);
                 if (index > -1) {
                     favoritePictures.splice(index, 1);
                 }
+                dispatch({type: DELETE_PICTURE, data });
                 localStorage.setItem("favoritePictures", JSON.stringify(favoritePictures));
-                setFavoritePictures(favoritePictures)
-                window.location.reload();
+                // setFavoritePictures(favoritePictures)
+               // window.location.reload();
                 // Swal.fire(
 
                 //     'Deleted!',
@@ -58,8 +65,9 @@ function FavoritePictures() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                setFavoritePictures([])
+                // setFavoritePictures([])
                 localStorage.setItem("favoritePictures", JSON.stringify([]));
+                dispatch({type:DELETE_ALL_PICTURES})
                 Swal.fire(
                     'Deleted!',
                     'Your file has been deleted.',
