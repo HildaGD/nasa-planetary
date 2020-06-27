@@ -1,0 +1,9 @@
+.navbarCustomize{
+    flex-grow: unset !important;
+}
+
+.imgCustomize{
+    width: 40px;
+    margin-right: 10px;
+    background-color: white;
+}
