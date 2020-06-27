@@ -28,7 +28,7 @@ function Bookmark(props) {
             localStorage.setItem("favoritePictures", JSON.stringify(favoritesImages));
             //setFavoritePictures(favoritesImages)
             dispatch({ type: SAVE_PICTURE, pictureData: props })
-            
+            Swal.fire('this images was saving in favorite pictures')
             
         } else {
            
