@@ -7,6 +7,9 @@ import ButtonIcon from '@material-ui/core/Button';
 import Swal from 'sweetalert2'
 import { SAVE_LIST_FAVORITE_PICTURES, DELETE_PICTURE, DELETE_ALL_PICTURES } from '../store/actions/types';
 import { useDispatch, useSelector } from "react-redux";
+import icon from '../img/22231-play-youtube.gif'
+import Tooltip from 'react-bootstrap/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 function FavoritePictures() {
     const dispatch = useDispatch()
@@ -16,12 +19,12 @@ function FavoritePictures() {
     useEffect(() => {
         const favoritePicturesFromLocalStorage = JSON.parse(localStorage.getItem("favoritePictures") || "[]")
         // setFavoritePictures(arrayOfPicturesFromLocalStorage)
-      
-      if(favoritePicturesFromLocalStorage.length>0){
-        setDeleteAllPictures(true)
-      }else{
-        setDeleteAllPictures(false)
-      }
+
+        if (favoritePicturesFromLocalStorage.length > 0) {
+            setDeleteAllPictures(true)
+        } else {
+            setDeleteAllPictures(false)
+        }
         dispatch({ type: SAVE_LIST_FAVORITE_PICTURES, favoritePicturesList: favoritePicturesFromLocalStorage });
     }, [])
 
@@ -58,7 +61,7 @@ function FavoritePictures() {
     }
 
     function deleteAllFavoritePictures() {
-        
+
         if (deleteAllPictures === true) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -85,6 +88,31 @@ function FavoritePictures() {
             Swal.fire('You don not have favorite pictures to delete')
         }
 
+    }
+
+    function mediaType(data) {
+        switch (data.media_type) {
+            case ('video'):
+                return (
+                    <OverlayTrigger
+                        overlay={
+                            <Tooltip id={`tooltip-left`}>
+                                <strong>Click here to open the video</strong>.
+                </Tooltip>
+                        }
+                    >
+                        <Card.Img className="img-thumbnail" variant="top" src={icon} onClick={() => window.open(data.url, "_blank")} />
+                    </OverlayTrigger>
+
+                )
+
+            case ('image'):
+                return (
+                    <Card.Img className="img-thumbnail" variant="top" src={data.hdurl} />
+                )
+            default:
+                return null
+        }
     }
 
     return (
@@ -118,14 +146,19 @@ function FavoritePictures() {
                                 <div key={index}>
 
                                     <Card style={{ width: '18rem' }}>
-                                        <Card.Img className="img-thumbnail" variant="top" src={item.hdurl} />
+                                        {mediaType(item)}
                                         <Card.Body>
                                             <Card.Title>{item.title}</Card.Title>
-                                            <Card.Footer>
-                                                <small className="text-muted">
+
+                                            <Card.Footer >
+
+                                                <small className="text-muted d-flex flex-row-reverse">
+
                                                     <ButtonIcon onClick={() => deletePictureOfFavorites(item)}>
                                                         <DeleteIcon />
                                                     </ButtonIcon>
+
+                                                    Astronomy Picture Day ({item.date})
 
                                                 </small>
                                             </Card.Footer>

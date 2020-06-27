@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import getPictureDate from '../services/getPictureDate'
 import getPreviousDay from '../services/getPreviousDay'
 import getNextDay from '../services/getNextDay'
-
+import icon from '../img/22231-play-youtube.gif'
 import Bookmark from '../components/Bookmark'
 
 function AstronomyPictureOfDay() {
@@ -17,7 +17,7 @@ function AstronomyPictureOfDay() {
     const [startDate, setStartDay] = useState(new Date());
     const [currentDate, setCurrentDay] = useState(new Date());
     const [showPicture, setShowPicture] = useState(false);
-    const [showYoutube, setShowYoutube] = useState(false);
+
 
     useEffect(() => { //did mount
         const today = moment(startDate).format('YYYY-MM-DD')
@@ -59,28 +59,6 @@ function AstronomyPictureOfDay() {
         }
     }
 
-    // function mediaType(data) {
-    //     switch (data.media_type) {
-    //         case ('video'):
-    //             return (
-    //                 <div>
-                      
-    //                 </div>
-                    
-    //             )
-
-    //         case ('image'):
-    //             return (
-    //                 <img
-    //                     className="rounded mx-auto d-block w-100"
-    //                     src={data.hdurl}
-    //                     alt="First slide"
-    //                 />
-    //             )
-    //         default:
-    //             return null
-    //     }
-    // }
 
 
     function handleDatepickerChange(date) {
@@ -96,7 +74,38 @@ function AstronomyPictureOfDay() {
         getPreviousPicture(specDay)
     }
 
+    function mediaType(data) {
+        switch (data.media_type) {
+            case ('video'):
+                return (
+                    <div>
 
+                        <small className="text-muted d-flex flex-row-reverse">
+                            Click in the image for opening the video
+                        </small>
+                        <img
+                            className="rounded mx-auto d-block w-100"
+                            src={icon}
+                            alt="First slide"
+                            onClick={() => window.open(data.url, "_blank")}
+                        />
+                    </div>
+
+
+                )
+
+            case ('image'):
+                return (
+                    <img
+                        className="rounded mx-auto d-block w-100"
+                        src={data.hdurl}
+                        alt="First slide"
+                    />
+                )
+            default:
+                return null
+        }
+    }
 
 
     return (
@@ -129,13 +138,14 @@ function AstronomyPictureOfDay() {
                     </div>
 
                     <div className='container-fluid' >
-                        <Carousel>
+                        <Carousel >
                             <Carousel.Item>
-                                <img
+                                {/* <img
                                     className="rounded mx-auto d-block w-100"
                                     src={dayBefore.url}
                                     alt="First slide"
-                                />
+                                /> */}
+                                {mediaType(dayBefore)}
                                 <Carousel.Caption>
                                     <h3>{dayBefore.title}</h3>
                                     <p><small>{dayBefore.explanation}</small></p>
@@ -145,11 +155,13 @@ function AstronomyPictureOfDay() {
                             </Carousel.Item>
 
                             <Carousel.Item>
-                                <img
+                                {/* <img
                                     className="rounded mx-auto d-block w-100"
                                     src={astrology.hdurl}
                                     alt="Second slide"
-                                />
+                                /> */}
+
+                                {mediaType(astrology)}
 
                                 <Carousel.Caption>
                                     <h3>{astrology.title}</h3>
@@ -161,11 +173,12 @@ function AstronomyPictureOfDay() {
 
                             {showPicture &&
                                 <Carousel.Item>
-                                    <img
+                                    {/* <img
                                         className="rounded mx-auto d-block w-100"
                                         src={dayAfter.url}
                                         alt="Third slide"
-                                    />
+                                    /> */}
+                                    {mediaType(dayAfter)}
 
                                     <Carousel.Caption>
                                         <h3>{dayAfter.title}</h3>

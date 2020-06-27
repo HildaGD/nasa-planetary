@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-//import MedicineIcon from './../img/appointment.svg'
+import icon from '../img/17703-talking-robot.gif'
 import './style.css'
 
 function Navbar() {
-    // Declare a new state variable, which we'll call "count"
+    
     const [menu, setMenu] = useState(false);
     const [show, setShow] = useState('')
 
-    useEffect(() => { //did mount
+    useEffect(() => { 
         setShow({show:(menu) ? "show" : "" })
     }, [menu]);
 
@@ -19,7 +19,7 @@ function Navbar() {
 
     return (
         <nav className="navbar navbar-expand-md bg-dark navbar-dark">
-            {/* <img className="imgCustomize" src={MedicineIcon} alt="Medicine Icon" /> */}
+            <img className="imgCustomize" src={icon} alt="icon" />
             <a className="navbar-brand" href="/">Nasa Planetory</a>
             <button className="navbar-toggler" type="button" onClick={toggleMenu}>
                 <span className="navbar-toggler-icon"></span>
