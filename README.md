@@ -1,4 +1,11 @@
+NASA APOD PROJECT
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+if you want to try the project, you need to install yarn:
+
+Install yarn: https://classic.yarnpkg.com/en/docs/install
+
 
 ## Available Scripts
 
