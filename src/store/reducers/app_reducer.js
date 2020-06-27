@@ -2,7 +2,7 @@ import {
     SAVE_PICTURE,
     DELETE_PICTURE,
     DELETE_ALL_PICTURES,
-    SAVE_ARRAY_OF_PICTURES
+    SAVE_LIST_FAVORITE_PICTURES
 } from '../actions/types'
 
 const initialState =  {favoritePictures: []}
@@ -10,11 +10,11 @@ const initialState =  {favoritePictures: []}
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case SAVE_ARRAY_OF_PICTURES:
-            const newArrayOfPictures = action.arrayOfPictures;
+        case SAVE_LIST_FAVORITE_PICTURES:
+            const newFavoritePicturesList = action.favoritePicturesList;
             return {
                 ...state,
-                favoritePictures: state.favoritePictures.concat( newArrayOfPictures )
+                favoritePictures: state.favoritePictures.concat( newFavoritePicturesList )
             }
         case SAVE_PICTURE:
             const newPicture = action.pictureData;
@@ -24,19 +24,14 @@ export default function (state = initialState, action) {
             }
          
         case DELETE_PICTURE:
-            const elementToEliminate = action.data;
-            const values = Object.values(state.favoritePictures)
-            console.log('state.favoritePictures', state.favoritePictures)
-            console.log('values', values)
-            console.log(typeof state.favoritePictures)
-            const favoritePicturesUpdated = [...values]
-            console.log(typeof favoritePicturesUpdated)
-            const indexOfElementToEliminate = favoritePicturesUpdated.findIndex((element) => elementToEliminate === element);
-
-            const newArray = favoritePicturesUpdated.filter((element, index) => index !== indexOfElementToEliminate);
+            const pictoreDataDelete = action.data;
+            const valuesFavoritesPicturesList = Object.values(state.favoritePictures)
+            const favoritePicturesUpdated = [...valuesFavoritesPicturesList]
+            const indexOfPictoreDataDelete = favoritePicturesUpdated.findIndex((element) => pictoreDataDelete === element);
+            const newListFavoritesPictures = favoritePicturesUpdated.filter((element, index) => index !== indexOfPictoreDataDelete);
             return {
                 ...state,
-                favoritePictures: newArray,
+                favoritePictures: newListFavoritesPictures,
             }
         case DELETE_ALL_PICTURES:
             return {

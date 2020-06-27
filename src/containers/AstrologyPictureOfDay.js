@@ -4,8 +4,6 @@ import Card from 'react-bootstrap/Card'
 import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
-import { useDispatch, useSelector } from "react-redux";
-import Youtube from 'react-youtube'
 import getPictureDate from '../services/getPictureDate'
 import getPreviousDay from '../services/getPreviousDay'
 import getNextDay from '../services/getNextDay'
@@ -13,7 +11,6 @@ import getNextDay from '../services/getNextDay'
 import Bookmark from '../components/Bookmark'
 
 function AstronomyPictureOfDay() {
-    // Declare a new state variable, which we'll call "count"
     const [astrology, setAstrology] = useState([]);
     const [dayBefore, setDayBefore] = useState([]);
     const [dayAfter, setDayAfter] = useState([]);

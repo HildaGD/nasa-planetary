@@ -3,26 +3,29 @@ import Card from 'react-bootstrap/Card'
 import CardDeck from 'react-bootstrap/CardDeck'
 import DeleteIcon from '@material-ui/icons/Delete';
 import Button from 'react-bootstrap/Button'
+import ButtonIcon from '@material-ui/core/Button';
 import Swal from 'sweetalert2'
-import { SAVE_ARRAY_OF_PICTURES, DELETE_PICTURE, DELETE_ALL_PICTURES } from '../store/actions/types';
+import { SAVE_LIST_FAVORITE_PICTURES, DELETE_PICTURE, DELETE_ALL_PICTURES } from '../store/actions/types';
 import { useDispatch, useSelector } from "react-redux";
 
 function FavoritePictures() {
     const dispatch = useDispatch()
-    const counter = useSelector(state => state.counter)
     const favoritePictures = useSelector(state => state.astronomy.favoritePictures)
     // const [favoritePictures, setFavoritePictures] = useState([])
-    const [enableButtonDelete, setEnableButtonDelete] = useState(false)
-
+    const [deleteAllPictures, setDeleteAllPictures] = useState(false)
     useEffect(() => {
-        const arrayOfPicturesFromLocalStorage = JSON.parse(localStorage.getItem("favoritePictures") || "[]")
+        const favoritePicturesFromLocalStorage = JSON.parse(localStorage.getItem("favoritePictures") || "[]")
         // setFavoritePictures(arrayOfPicturesFromLocalStorage)
-        dispatch({type: SAVE_ARRAY_OF_PICTURES, arrayOfPictures: arrayOfPicturesFromLocalStorage});
+      
+      if(favoritePicturesFromLocalStorage.length>0){
+        setDeleteAllPictures(true)
+      }else{
+        setDeleteAllPictures(false)
+      }
+        dispatch({ type: SAVE_LIST_FAVORITE_PICTURES, favoritePicturesList: favoritePicturesFromLocalStorage });
     }, [])
 
     function deletePictureOfFavorites(data) {
-
-
 
         Swal.fire({
             title: 'Are you sure?',
@@ -38,43 +41,50 @@ function FavoritePictures() {
                 if (index > -1) {
                     favoritePictures.splice(index, 1);
                 }
-                dispatch({type: DELETE_PICTURE, data });
+                dispatch({ type: DELETE_PICTURE, data });
                 localStorage.setItem("favoritePictures", JSON.stringify(favoritePictures));
-                // setFavoritePictures(favoritePictures)
-               // window.location.reload();
-                // Swal.fire(
-
-                //     'Deleted!',
-                //     'Your file has been deleted.',
-                //     'success'
-                // )
-            }
-        })
-
-    }
-
-    function deleteAllFavoritePictures() {
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.value) {
-                // setFavoritePictures([])
-                localStorage.setItem("favoritePictures", JSON.stringify([]));
-                dispatch({type:DELETE_ALL_PICTURES})
                 Swal.fire(
+
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
                 )
             }
         })
+
+
+
+
+    }
+
+    function deleteAllFavoritePictures() {
+        
+        if (deleteAllPictures === true) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    // setFavoritePictures([])
+                    localStorage.setItem("favoritePictures", JSON.stringify([]));
+                    dispatch({ type: DELETE_ALL_PICTURES })
+                    setDeleteAllPictures(false)
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+            })
+        } else {
+            Swal.fire('You don not have favorite pictures to delete')
+        }
+
     }
 
     return (
@@ -104,8 +114,8 @@ function FavoritePictures() {
                     <div className="container-fluid">
 
                         <CardDeck>
-                            {favoritePictures.map(item => (
-                                <div key={item}>
+                            {favoritePictures.map((item, index) => (
+                                <div key={index}>
 
                                     <Card style={{ width: '18rem' }}>
                                         <Card.Img className="img-thumbnail" variant="top" src={item.hdurl} />
@@ -113,7 +123,10 @@ function FavoritePictures() {
                                             <Card.Title>{item.title}</Card.Title>
                                             <Card.Footer>
                                                 <small className="text-muted">
-                                                    <DeleteIcon onClick={() => deletePictureOfFavorites(item)} />
+                                                    <ButtonIcon onClick={() => deletePictureOfFavorites(item)}>
+                                                        <DeleteIcon />
+                                                    </ButtonIcon>
+
                                                 </small>
                                             </Card.Footer>
                                         </Card.Body>
